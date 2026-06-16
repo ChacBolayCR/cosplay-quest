@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/cosplay_project.dart';
+import '../screens/references_screen.dart';
 import '../theme/cosplay_theme.dart';
 import '../widgets/avatar_progress_card.dart';
 import '../widgets/build_journal_card.dart';
@@ -41,10 +42,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   }
 
   Future<void> _showAddMissionSheet() async {
-    final titleController = TextEditingController();
-    final xpController = TextEditingController(text: '10');
-    final formKey = GlobalKey<FormState>();
-
+    final messenger = ScaffoldMessenger.of(context);
     final mission = await showModalBottomSheet<CosplayMission>(
       context: context,
       isScrollControlled: true,
@@ -52,94 +50,15 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.fromLTRB(
-            18,
-            18,
-            18,
-            MediaQuery.of(context).viewInsets.bottom + 18,
-          ),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        'Agregar misi\u00F3n extra',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.close_rounded),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: titleController,
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    labelText: 'T\u00EDtulo de misi\u00F3n',
-                    prefixIcon: Icon(Icons.flag),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Ingresa el t\u00EDtulo de la misi\u00F3n';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: xpController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'XP',
-                    prefixIcon: Icon(Icons.bolt),
-                  ),
-                  validator: (value) {
-                    final xp = int.tryParse(value?.trim() ?? '');
-                    if (xp == null || xp <= 0) return 'Ingresa XP v\u00E1lido';
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                FilledButton.icon(
-                  onPressed: () {
-                    if (!formKey.currentState!.validate()) return;
-                    Navigator.of(context).pop(
-                      CosplayMission(
-                        title: titleController.text.trim(),
-                        xp: int.parse(xpController.text.trim()),
-                        icon: Icons.add_task,
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.add_rounded),
-                  label: const Text('Agregar misi\u00F3n'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+      builder: (sheetContext) => const _AddMissionSheet(),
     );
 
-    titleController.dispose();
-    xpController.dispose();
-
-    if (mission == null) return;
+    if (!mounted || mission == null) return;
     setState(() => project.missions.add(mission));
     widget.onProjectChanged();
+    messenger.showSnackBar(
+      const SnackBar(content: Text('Misi\u00F3n agregada +10 XP')),
+    );
   }
 
   void _continueMission() {
@@ -166,6 +85,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
               onMissionComplete: _completeMission,
               onAddMission: _showAddMissionSheet,
             ),
+            ReferencesScreen(project: project),
             _AvatarTab(project: project),
           ],
         ),
@@ -176,8 +96,107 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Aventura'),
           BottomNavigationBarItem(icon: Icon(Icons.flag), label: 'Misiones'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.photo_library),
+            label: 'Referencias',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Avatar'),
         ],
+      ),
+    );
+  }
+}
+
+class _AddMissionSheet extends StatefulWidget {
+  const _AddMissionSheet();
+
+  @override
+  State<_AddMissionSheet> createState() => _AddMissionSheetState();
+}
+
+class _AddMissionSheetState extends State<_AddMissionSheet> {
+  final _formKey = GlobalKey<FormState>();
+  final _titleController = TextEditingController();
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    if (!_formKey.currentState!.validate()) return;
+    Navigator.of(context).pop(
+      CosplayMission(
+        title: _titleController.text.trim(),
+        type: MissionType.custom,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        18,
+        18,
+        18,
+        MediaQuery.of(context).viewInsets.bottom + 18,
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Agregar misi\u00F3n extra',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close_rounded),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Las misiones personalizadas otorgan +10 XP.',
+              style: TextStyle(
+                color: CosplayTheme.mutedText,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 14),
+            TextFormField(
+              controller: _titleController,
+              autofocus: true,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => _submit(),
+              decoration: const InputDecoration(
+                labelText: 'T\u00EDtulo de misi\u00F3n',
+                prefixIcon: Icon(Icons.flag),
+                suffixText: '+10 XP',
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Ingresa el t\u00EDtulo de la misi\u00F3n';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              onPressed: _submit,
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Agregar misi\u00F3n'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -231,6 +250,7 @@ class _AdventureTab extends StatelessWidget {
         for (var index = 0; index < project.missions.length; index++) ...[
           MissionCard(
             title: project.missions[index].title,
+            category: project.missions[index].categoryLabel,
             xp: project.missions[index].xp,
             icon: project.missions[index].icon,
             completed: project.missions[index].completed,
@@ -276,6 +296,7 @@ class _MissionsTab extends StatelessWidget {
         for (var index = 0; index < project.missions.length; index++) ...[
           MissionCard(
             title: project.missions[index].title,
+            category: project.missions[index].categoryLabel,
             xp: project.missions[index].xp,
             icon: project.missions[index].icon,
             completed: project.missions[index].completed,
