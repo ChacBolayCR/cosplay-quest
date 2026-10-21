@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../theme/cosplay_theme.dart';
 
 class BuildJournalCard extends StatelessWidget {
@@ -9,6 +10,8 @@ class BuildJournalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
@@ -26,7 +29,7 @@ class BuildJournalCard extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Diario de creaci\u00F3n',
+                  l10n.buildJournal,
                   style: Theme.of(
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -62,7 +65,7 @@ class BuildJournalCard extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.arrow_forward_rounded),
-              label: const Text('Ver diario'),
+              label: Text(l10n.viewJournal),
             ),
           ),
         ],

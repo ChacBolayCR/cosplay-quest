@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+
 class CosplayProject {
   CosplayProject({
     required this.name,
@@ -10,10 +12,11 @@ class CosplayProject {
     required this.missions,
     List<VisualReference>? references,
     this.baseXp = 1250,
-    this.journalEntries = const [
-      'Primer boceto',
-      'Materiales comprados',
-      'Primera pieza terminada',
+    this.journalEntries = const [],
+    this.journalEntryKeys = const [
+      JournalEntryKey.firstSketch,
+      JournalEntryKey.materialsBought,
+      JournalEntryKey.firstPieceDone,
     ],
   }) : references = references ?? createMockReferences();
 
@@ -26,6 +29,7 @@ class CosplayProject {
   final List<CosplayMission> missions;
   final List<VisualReference> references;
   final List<String> journalEntries;
+  final List<JournalEntryKey> journalEntryKeys;
 
   int get completedCount =>
       missions.where((mission) => mission.completed).length;
@@ -52,34 +56,52 @@ class CosplayProject {
     return target.difference(current).inDays.clamp(0, 9999);
   }
 
-  String get rank {
-    if (progress >= 1) return 'Leyenda del Taller';
-    if (progress >= 0.65) return 'Maestro de Props';
-    if (progress >= 0.35) return 'Forjador de Foam';
-    return 'Aprendiz de Taller';
+  String localizedRank(AppLocalizations l10n) {
+    if (progress >= 1) return l10n.rankWorkshopLegend;
+    if (progress >= 0.65) return l10n.rankPropsMaster;
+    if (progress >= 0.35) return l10n.rankFoamForger;
+    return l10n.rankWorkshopApprentice;
   }
 
-  String get nextMission {
+  String localizedNextMission(AppLocalizations l10n) {
     final pending = missions.where((mission) => !mission.completed);
-    if (pending.isEmpty) return 'Aventura completada';
-    return pending.first.title;
+    if (pending.isEmpty) return l10n.adventureComplete;
+    return pending.first.localizedTitle(l10n);
+  }
+
+  List<String> localizedJournalEntries(AppLocalizations l10n) {
+    return [
+      ...journalEntryKeys.map((entry) => entry.localizedLabel(l10n)),
+      ...journalEntries,
+    ];
   }
 }
 
 enum MissionType {
-  research(5, 'Investigacion', Icons.travel_explore),
-  materials(10, 'Materiales', Icons.shopping_bag),
-  crafting(20, 'Construccion', Icons.construction),
-  painting(20, 'Pintura', Icons.brush),
-  assembly(30, 'Ensamble', Icons.handyman),
-  finalTest(40, 'Prueba final', Icons.verified),
-  custom(10, 'Personalizada', Icons.add_task);
+  research(5, Icons.travel_explore),
+  materials(10, Icons.shopping_bag),
+  crafting(20, Icons.construction),
+  painting(20, Icons.brush),
+  assembly(30, Icons.handyman),
+  finalTest(40, Icons.verified),
+  custom(10, Icons.add_task);
 
-  const MissionType(this.xp, this.label, this.icon);
+  const MissionType(this.xp, this.icon);
 
   final int xp;
-  final String label;
   final IconData icon;
+
+  String localizedLabel(AppLocalizations l10n) {
+    return switch (this) {
+      MissionType.research => l10n.missionTypeResearch,
+      MissionType.materials => l10n.missionTypeMaterials,
+      MissionType.crafting => l10n.missionTypeCrafting,
+      MissionType.painting => l10n.missionTypePainting,
+      MissionType.assembly => l10n.missionTypeAssembly,
+      MissionType.finalTest => l10n.missionTypeFinalTest,
+      MissionType.custom => l10n.missionTypeCustom,
+    };
+  }
 }
 
 class CosplayMission {
@@ -87,16 +109,56 @@ class CosplayMission {
     required this.title,
     required this.type,
     IconData? icon,
+    this.template,
     this.completed = false,
   }) : icon = icon ?? type.icon;
 
   final String title;
   final MissionType type;
   final IconData icon;
+  final MissionTemplate? template;
   bool completed;
 
   int get xp => type.xp;
-  String get categoryLabel => type.label;
+  String localizedCategoryLabel(AppLocalizations l10n) =>
+      type.localizedLabel(l10n);
+
+  String localizedTitle(AppLocalizations l10n) {
+    return switch (template) {
+      MissionTemplate.researchReferences => l10n.missionResearchReferences,
+      MissionTemplate.buyEvaFoam => l10n.missionBuyEvaFoam,
+      MissionTemplate.cutHelmetPieces => l10n.missionCutHelmetPieces,
+      MissionTemplate.sealSurface => l10n.missionSealSurface,
+      MissionTemplate.paintGoldDetails => l10n.missionPaintGoldDetails,
+      MissionTemplate.assembleStaff => l10n.missionAssembleStaff,
+      MissionTemplate.finalCosplayTest => l10n.missionFinalCosplayTest,
+      null => title,
+    };
+  }
+}
+
+enum MissionTemplate {
+  researchReferences,
+  buyEvaFoam,
+  cutHelmetPieces,
+  sealSurface,
+  paintGoldDetails,
+  assembleStaff,
+  finalCosplayTest,
+}
+
+enum JournalEntryKey {
+  firstSketch,
+  materialsBought,
+  firstPieceDone;
+
+  String localizedLabel(AppLocalizations l10n) {
+    return switch (this) {
+      JournalEntryKey.firstSketch => l10n.journalFirstSketch,
+      JournalEntryKey.materialsBought => l10n.journalMaterialsBought,
+      JournalEntryKey.firstPieceDone => l10n.journalFirstPieceDone,
+    };
+  }
 }
 
 class VisualReference {
@@ -106,6 +168,7 @@ class VisualReference {
     required this.description,
     required this.icon,
     required this.colors,
+    this.template,
   });
 
   final String title;
@@ -113,25 +176,90 @@ class VisualReference {
   final String description;
   final IconData icon;
   final List<Color> colors;
+  final ReferenceTemplate? template;
+
+  String localizedTitle(AppLocalizations l10n) {
+    return switch (template) {
+      ReferenceTemplate.frontView => l10n.referenceFrontViewTitle,
+      ReferenceTemplate.backView => l10n.referenceBackViewTitle,
+      ReferenceTemplate.armorDetail => l10n.referenceArmorDetailTitle,
+      ReferenceTemplate.staff => l10n.referenceStaffTitle,
+      ReferenceTemplate.colorPalette => l10n.referenceColorPaletteTitle,
+      ReferenceTemplate.materials => l10n.referenceMaterialsTitle,
+      null => title,
+    };
+  }
+
+  String localizedCategory(AppLocalizations l10n) {
+    return switch (template) {
+      ReferenceTemplate.frontView => l10n.referenceFrontViewCategory,
+      ReferenceTemplate.backView => l10n.referenceBackViewCategory,
+      ReferenceTemplate.armorDetail => l10n.referenceArmorDetailCategory,
+      ReferenceTemplate.staff => l10n.referenceStaffCategory,
+      ReferenceTemplate.colorPalette => l10n.referenceColorPaletteCategory,
+      ReferenceTemplate.materials => l10n.referenceMaterialsCategory,
+      null => category,
+    };
+  }
+
+  String localizedDescription(AppLocalizations l10n) {
+    return switch (template) {
+      ReferenceTemplate.frontView => l10n.referenceFrontViewDescription,
+      ReferenceTemplate.backView => l10n.referenceBackViewDescription,
+      ReferenceTemplate.armorDetail => l10n.referenceArmorDetailDescription,
+      ReferenceTemplate.staff => l10n.referenceStaffDescription,
+      ReferenceTemplate.colorPalette => l10n.referenceColorPaletteDescription,
+      ReferenceTemplate.materials => l10n.referenceMaterialsDescription,
+      null => description,
+    };
+  }
+}
+
+enum ReferenceTemplate {
+  frontView,
+  backView,
+  armorDetail,
+  staff,
+  colorPalette,
+  materials,
 }
 
 List<CosplayMission> createMockMissions() {
   return [
-    CosplayMission(title: 'Investigar referencias', type: MissionType.research),
-    CosplayMission(title: 'Comprar EVA Foam', type: MissionType.materials),
     CosplayMission(
-      title: 'Cortar piezas del casco',
+      title: '',
+      type: MissionType.research,
+      template: MissionTemplate.researchReferences,
+    ),
+    CosplayMission(
+      title: '',
+      type: MissionType.materials,
+      template: MissionTemplate.buyEvaFoam,
+    ),
+    CosplayMission(
+      title: '',
       type: MissionType.crafting,
+      template: MissionTemplate.cutHelmetPieces,
     ),
-    CosplayMission(title: 'Sellar superficie', type: MissionType.crafting),
     CosplayMission(
-      title: 'Pintar detalles dorados',
+      title: '',
+      type: MissionType.crafting,
+      template: MissionTemplate.sealSurface,
+    ),
+    CosplayMission(
+      title: '',
       type: MissionType.painting,
+      template: MissionTemplate.paintGoldDetails,
     ),
-    CosplayMission(title: 'Ensamblar bast\u00F3n', type: MissionType.assembly),
     CosplayMission(
-      title: 'Prueba final del cosplay',
+      title: '',
+      type: MissionType.assembly,
+      template: MissionTemplate.assembleStaff,
+    ),
+    CosplayMission(
+      title: '',
       type: MissionType.finalTest,
+      template: MissionTemplate.finalCosplayTest,
     ),
   ];
 }
@@ -145,6 +273,7 @@ List<VisualReference> createMockReferences() {
           'Proporcion general del personaje, volumen de tunica, hombreras y presencia escenica.',
       icon: Icons.accessibility_new,
       colors: [Color(0xFF243044), Color(0xFF5B4A7E)],
+      template: ReferenceTemplate.frontView,
     ),
     VisualReference(
       title: 'Vista trasera',
@@ -153,6 +282,7 @@ List<VisualReference> createMockReferences() {
           'Referencia para capas, caida de tela y lectura del personaje desde atras.',
       icon: Icons.rotate_left,
       colors: [Color(0xFF1D2D3A), Color(0xFF3A4E68)],
+      template: ReferenceTemplate.backView,
     ),
     VisualReference(
       title: 'Detalle de armadura',
@@ -161,6 +291,7 @@ List<VisualReference> createMockReferences() {
           'Formas duras, bordes elevados y detalles dorados para construir piezas con foam.',
       icon: Icons.shield_moon,
       colors: [Color(0xFF2B2836), Color(0xFF8A6E35)],
+      template: ReferenceTemplate.armorDetail,
     ),
     VisualReference(
       title: 'Bast\u00F3n / accesorio',
@@ -169,6 +300,7 @@ List<VisualReference> createMockReferences() {
           'Longitud, ornamentos y centro focal del accesorio principal.',
       icon: Icons.auto_fix_high,
       colors: [Color(0xFF30233D), Color(0xFF6D5D9B)],
+      template: ReferenceTemplate.staff,
     ),
     VisualReference(
       title: 'Paleta de colores',
@@ -177,6 +309,7 @@ List<VisualReference> createMockReferences() {
           'Negros suaves, dorado envejecido, morados apagados y acentos frios.',
       icon: Icons.palette,
       colors: [Color(0xFF11151E), Color(0xFFE7B84B)],
+      template: ReferenceTemplate.colorPalette,
     ),
     VisualReference(
       title: 'Inspiraci\u00F3n de materiales',
@@ -185,6 +318,7 @@ List<VisualReference> createMockReferences() {
           'Texturas sugeridas: EVA foam sellado, tela pesada, pintura metalica y gemas falsas.',
       icon: Icons.texture,
       colors: [Color(0xFF18202C), Color(0xFF5C6C7E)],
+      template: ReferenceTemplate.materials,
     ),
   ];
 }

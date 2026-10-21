@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/cosplay_project.dart';
 import '../theme/cosplay_theme.dart';
 
@@ -66,19 +67,21 @@ class ReferencesScreen extends StatelessWidget {
   }
 
   void _openReference(BuildContext context, VisualReference reference) {
+    final l10n = AppLocalizations.of(context);
+
     showGeneralDialog<void>(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Cerrar referencia',
+      barrierLabel: l10n.closeReference,
       barrierColor: Colors.black.withValues(alpha: 0.84),
       pageBuilder: (context, _, __) {
         return Scaffold(
           backgroundColor: CosplayTheme.voidBlack,
           appBar: AppBar(
-            title: Text(reference.title),
+            title: Text(reference.localizedTitle(l10n)),
             actions: [
               IconButton(
-                tooltip: 'Cerrar',
+                tooltip: l10n.close,
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.close_rounded),
               ),
@@ -123,13 +126,13 @@ class ReferencesScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          reference.title,
+                          reference.localizedTitle(l10n),
                           style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(fontWeight: FontWeight.w900),
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          reference.category,
+                          reference.localizedCategory(l10n),
                           style: const TextStyle(
                             color: CosplayTheme.questGold,
                             fontWeight: FontWeight.w900,
@@ -137,7 +140,7 @@ class ReferencesScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          reference.description,
+                          reference.localizedDescription(l10n),
                           style: const TextStyle(
                             color: CosplayTheme.mutedText,
                             fontWeight: FontWeight.w600,
@@ -150,9 +153,7 @@ class ReferencesScreen extends StatelessWidget {
                           child: OutlinedButton.icon(
                             onPressed: null,
                             icon: const Icon(Icons.add_task),
-                            label: const Text(
-                              'Crear misi\u00F3n desde referencia',
-                            ),
+                            label: Text(l10n.createQuestFromReference),
                           ),
                         ),
                       ],
@@ -175,6 +176,8 @@ class _ReferencesHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -203,14 +206,14 @@ class _ReferencesHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Referencias Visuales',
+                  l10n.visualReferences,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Moodboard de $projectName para formas, colores y materiales.',
+                  l10n.referencesMoodboard(projectName),
                   style: const TextStyle(
                     color: CosplayTheme.mutedText,
                     fontWeight: FontWeight.w600,
@@ -233,6 +236,8 @@ class _ReferenceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(24),
@@ -263,7 +268,7 @@ class _ReferenceTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        reference.title,
+                        reference.localizedTitle(l10n),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -273,7 +278,7 @@ class _ReferenceTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        reference.category,
+                        reference.localizedCategory(l10n),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -285,7 +290,7 @@ class _ReferenceTile extends StatelessWidget {
                       const SizedBox(height: 8),
                       Expanded(
                         child: Text(
-                          reference.description,
+                          reference.localizedDescription(l10n),
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -316,6 +321,7 @@ class _ReferenceArtwork extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final lineColor = Colors.white.withValues(alpha: expanded ? 0.15 : 0.11);
 
     return Container(
@@ -345,7 +351,7 @@ class _ReferenceArtwork extends StatelessWidget {
             left: expanded ? 34 : 14,
             top: expanded ? 34 : 14,
             child: _ArtworkPill(
-              label: 'MOCK REF',
+              label: l10n.mockReferenceLabel,
               expanded: expanded,
               icon: Icons.image,
             ),
@@ -402,7 +408,7 @@ class _ReferenceArtwork extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          reference.title,
+                          reference.localizedTitle(l10n),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -414,7 +420,7 @@ class _ReferenceArtwork extends StatelessWidget {
                         if (expanded) ...[
                           const SizedBox(height: 4),
                           Text(
-                            reference.category,
+                            reference.localizedCategory(l10n),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(

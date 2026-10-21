@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../theme/cosplay_theme.dart';
 
 class HeroProjectCard extends StatelessWidget {
@@ -20,6 +21,8 @@ class HeroProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(22),
@@ -63,8 +66,8 @@ class HeroProjectCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(999),
                   border: Border.all(color: CosplayTheme.border),
                 ),
-                child: const Text(
-                  'Aventura activa',
+                child: Text(
+                  l10n.activeQuest,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w800,
@@ -82,8 +85,8 @@ class HeroProjectCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Convierte tu cosplay en una aventura',
+              Text(
+                l10n.welcomeSubtitle,
                 style: TextStyle(
                   color: CosplayTheme.mutedText,
                   fontSize: 16,
@@ -99,7 +102,7 @@ class HeroProjectCard extends StatelessWidget {
                   _QuestPill(icon: Icons.event, label: eventName),
                   _QuestPill(
                     icon: Icons.hourglass_top,
-                    label: '$daysRemaining d\u00EDas',
+                    label: l10n.daysShort(daysRemaining),
                   ),
                 ],
               ),
@@ -134,7 +137,7 @@ class HeroProjectCard extends StatelessWidget {
               FilledButton.icon(
                 onPressed: onContinue,
                 icon: const Icon(Icons.play_arrow_rounded),
-                label: const Text('Continuar misi\u00F3n'),
+                label: Text(l10n.continueQuest),
               ),
             ],
           ),

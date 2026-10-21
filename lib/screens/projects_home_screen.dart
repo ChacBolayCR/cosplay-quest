@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/cosplay_project.dart';
 import '../theme/cosplay_theme.dart';
 
@@ -17,12 +18,14 @@ class ProjectsHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Aventuras'),
+        title: Text(l10n.adventures),
         actions: [
           IconButton(
-            tooltip: 'Nuevo proyecto',
+            tooltip: l10n.newProject,
             onPressed: onCreateProject,
             icon: const Icon(Icons.add_rounded),
           ),
@@ -41,7 +44,7 @@ class ProjectsHomeScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            'Tus proyectos cosplay',
+                            l10n.yourCosplayProjects,
                             style: Theme.of(context).textTheme.headlineSmall
                                 ?.copyWith(fontWeight: FontWeight.w900),
                           ),
@@ -49,7 +52,7 @@ class ProjectsHomeScreen extends StatelessWidget {
                         FilledButton.icon(
                           onPressed: onCreateProject,
                           icon: const Icon(Icons.add_rounded),
-                          label: const Text('Nuevo proyecto'),
+                          label: Text(l10n.newProject),
                         ),
                       ],
                     );
@@ -75,6 +78,8 @@ class _ProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(22),
@@ -156,7 +161,7 @@ class _ProjectCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '${project.daysRemaining} d\u00EDas restantes',
+                  l10n.daysRemaining(project.daysRemaining),
                   style: const TextStyle(
                     color: CosplayTheme.mutedText,
                     fontWeight: FontWeight.w600,
@@ -178,6 +183,8 @@ class _EmptyProjectsState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -199,14 +206,14 @@ class _EmptyProjectsState extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'A\u00FAn no tienes aventuras activas',
+            Text(
+              l10n.emptyProjectsTitle,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Crea tu primer cosplay y empieza la misi\u00F3n',
+            Text(
+              l10n.emptyProjectsBody,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: CosplayTheme.mutedText,
@@ -217,7 +224,7 @@ class _EmptyProjectsState extends StatelessWidget {
             FilledButton.icon(
               onPressed: onCreateProject,
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Crear proyecto'),
+              label: Text(l10n.createQuest),
             ),
           ],
         ),

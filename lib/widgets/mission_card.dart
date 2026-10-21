@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../theme/cosplay_theme.dart';
 
 class MissionCard extends StatelessWidget {
@@ -22,6 +23,8 @@ class MissionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 220),
       padding: const EdgeInsets.all(14),
@@ -89,7 +92,7 @@ class MissionCard extends StatelessWidget {
                     border: Border.all(color: CosplayTheme.border),
                   ),
                   child: Text(
-                    completed ? 'Completado' : 'Pendiente',
+                    completed ? l10n.completed : l10n.pending,
                     style: TextStyle(
                       color: completed
                           ? CosplayTheme.questGold

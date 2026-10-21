@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../theme/cosplay_theme.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -14,6 +15,8 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       body: DecoratedBox(
         decoration: const BoxDecoration(
@@ -98,22 +101,25 @@ class WelcomeScreen extends StatelessWidget {
                           Positioned(
                             left: 36,
                             bottom: 46,
-                            child: _HeroChip(icon: Icons.brush, label: 'Props'),
+                            child: _HeroChip(
+                              icon: Icons.brush,
+                              label: l10n.props,
+                            ),
                           ),
                           Positioned(
                             right: 36,
                             bottom: 42,
                             child: _HeroChip(
                               icon: Icons.shield_moon,
-                              label: 'Armor',
+                              label: l10n.armor,
                             ),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 30),
-                    const Text(
-                      'Cosplay Quest',
+                    Text(
+                      l10n.appTitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 42,
@@ -122,8 +128,8 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
-                      'Convierte tu cosplay en una aventura',
+                    Text(
+                      l10n.welcomeMessage,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: CosplayTheme.mutedText,
@@ -135,13 +141,13 @@ class WelcomeScreen extends StatelessWidget {
                     FilledButton.icon(
                       onPressed: onEnter,
                       icon: const Icon(Icons.login_rounded),
-                      label: const Text('Entrar'),
+                      label: Text(l10n.enterButton),
                     ),
                     const SizedBox(height: 12),
                     OutlinedButton.icon(
                       onPressed: onCreateProject,
                       icon: const Icon(Icons.add_rounded),
-                      label: const Text('Crear proyecto'),
+                      label: Text(l10n.createQuest),
                     ),
                   ],
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/cosplay_project.dart';
 import '../screens/references_screen.dart';
 import '../theme/cosplay_theme.dart';
@@ -36,8 +37,9 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
     setState(() => mission.completed = true);
     widget.onProjectChanged();
+    final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Misi\u00F3n completada +${mission.xp} XP')),
+      SnackBar(content: Text(l10n.missionCompletedSnack(mission.xp))),
     );
   }
 
@@ -57,7 +59,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     setState(() => project.missions.add(mission));
     widget.onProjectChanged();
     messenger.showSnackBar(
-      const SnackBar(content: Text('Misi\u00F3n agregada +10 XP')),
+      SnackBar(content: Text(AppLocalizations.of(context).missionAddedSnack)),
     );
   }
 
@@ -67,6 +69,8 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(title: Text(project.name)),
       body: SafeArea(
@@ -93,14 +97,23 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedTab,
         onTap: (index) => setState(() => _selectedTab = index),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Aventura'),
-          BottomNavigationBarItem(icon: Icon(Icons.flag), label: 'Misiones'),
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.photo_library),
-            label: 'Referencias',
+            icon: const Icon(Icons.explore),
+            label: l10n.adventure,
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Avatar'),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.flag),
+            label: l10n.quests,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.photo_library),
+            label: l10n.references,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.person),
+            label: l10n.avatar,
+          ),
         ],
       ),
     );
@@ -136,6 +149,8 @@ class _AddMissionSheetState extends State<_AddMissionSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Padding(
       padding: EdgeInsets.fromLTRB(
         18,
@@ -151,9 +166,9 @@ class _AddMissionSheetState extends State<_AddMissionSheet> {
           children: [
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Agregar misi\u00F3n extra',
+                    l10n.addExtraQuest,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
                   ),
                 ),
@@ -164,8 +179,8 @@ class _AddMissionSheetState extends State<_AddMissionSheet> {
               ],
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Las misiones personalizadas otorgan +10 XP.',
+            Text(
+              l10n.customQuestXpHelp,
               style: TextStyle(
                 color: CosplayTheme.mutedText,
                 fontWeight: FontWeight.w700,
@@ -177,14 +192,14 @@ class _AddMissionSheetState extends State<_AddMissionSheet> {
               autofocus: true,
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (_) => _submit(),
-              decoration: const InputDecoration(
-                labelText: 'T\u00EDtulo de misi\u00F3n',
-                prefixIcon: Icon(Icons.flag),
+              decoration: InputDecoration(
+                labelText: l10n.questTitleLabel,
+                prefixIcon: const Icon(Icons.flag),
                 suffixText: '+10 XP',
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Ingresa el t\u00EDtulo de la misi\u00F3n';
+                  return l10n.questTitleError;
                 }
                 return null;
               },
@@ -193,7 +208,7 @@ class _AddMissionSheetState extends State<_AddMissionSheet> {
             FilledButton.icon(
               onPressed: _submit,
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Agregar misi\u00F3n'),
+              label: Text(l10n.addQuest),
             ),
           ],
         ),
@@ -219,6 +234,8 @@ class _AdventureTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return _QuestScrollView(
       children: [
         HeroProjectCard(
@@ -232,11 +249,14 @@ class _AdventureTab extends StatelessWidget {
         ProgressCard(
           progress: project.progress,
           currentXp: project.currentXp,
-          rank: project.rank,
-          nextMission: project.nextMission,
+          rank: project.localizedRank(l10n),
+          nextMission: project.localizedNextMission(l10n),
         ),
         const SizedBox(height: 18),
-        AvatarProgressCard(progress: project.progress, rank: project.rank),
+        AvatarProgressCard(
+          progress: project.progress,
+          rank: project.localizedRank(l10n),
+        ),
         if (project.isComplete) ...[
           const SizedBox(height: 18),
           _CompletedProjectCard(
@@ -245,12 +265,12 @@ class _AdventureTab extends StatelessWidget {
           ),
         ],
         const SizedBox(height: 22),
-        _SectionTitle(title: 'Misiones', icon: Icons.flag_circle),
+        _SectionTitle(title: l10n.quests, icon: Icons.flag_circle),
         const SizedBox(height: 12),
         for (var index = 0; index < project.missions.length; index++) ...[
           MissionCard(
-            title: project.missions[index].title,
-            category: project.missions[index].categoryLabel,
+            title: project.missions[index].localizedTitle(l10n),
+            category: project.missions[index].localizedCategoryLabel(l10n),
             xp: project.missions[index].xp,
             icon: project.missions[index].icon,
             completed: project.missions[index].completed,
@@ -259,7 +279,7 @@ class _AdventureTab extends StatelessWidget {
           const SizedBox(height: 10),
         ],
         const SizedBox(height: 10),
-        BuildJournalCard(entries: project.journalEntries),
+        BuildJournalCard(entries: project.localizedJournalEntries(l10n)),
       ],
     );
   }
@@ -278,16 +298,18 @@ class _MissionsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return _QuestScrollView(
       children: [
         _PageHeader(
-          title: 'Misiones',
+          title: l10n.quests,
           subtitle: project.isComplete
-              ? 'Todas las misiones base est\u00E1n completas.'
-              : 'Gana XP completando pasos de tu build.',
+              ? l10n.allBaseQuestsComplete
+              : l10n.gainXpSubtitle,
           icon: Icons.flag,
           trailing: IconButton.filled(
-            tooltip: 'Agregar misi\u00F3n extra',
+            tooltip: l10n.addExtraQuest,
             onPressed: onAddMission,
             icon: const Icon(Icons.add_rounded),
           ),
@@ -295,8 +317,8 @@ class _MissionsTab extends StatelessWidget {
         const SizedBox(height: 18),
         for (var index = 0; index < project.missions.length; index++) ...[
           MissionCard(
-            title: project.missions[index].title,
-            category: project.missions[index].categoryLabel,
+            title: project.missions[index].localizedTitle(l10n),
+            category: project.missions[index].localizedCategoryLabel(l10n),
             xp: project.missions[index].xp,
             icon: project.missions[index].icon,
             completed: project.missions[index].completed,
@@ -316,21 +338,26 @@ class _AvatarTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return _QuestScrollView(
       children: [
-        const _PageHeader(
-          title: 'Avatar',
-          subtitle: 'Tu rango crece con cada victoria de taller.',
+        _PageHeader(
+          title: l10n.avatar,
+          subtitle: l10n.avatarRankSubtitle,
           icon: Icons.face_retouching_natural,
         ),
         const SizedBox(height: 18),
-        AvatarProgressCard(progress: project.progress, rank: project.rank),
+        AvatarProgressCard(
+          progress: project.progress,
+          rank: project.localizedRank(l10n),
+        ),
         const SizedBox(height: 18),
         ProgressCard(
           progress: project.progress,
           currentXp: project.currentXp,
-          rank: project.rank,
-          nextMission: project.nextMission,
+          rank: project.localizedRank(l10n),
+          nextMission: project.localizedNextMission(l10n),
         ),
       ],
     );
@@ -348,6 +375,8 @@ class _CompletedProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -360,13 +389,13 @@ class _CompletedProjectCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '\u{1F389} \u00A1Cosplay completado!',
+          Text(
+            l10n.cosplayCompletedTitle,
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Tu aventura est\u00E1 lista para el evento.',
+          Text(
+            l10n.cosplayCompletedBody,
             style: TextStyle(
               color: CosplayTheme.mutedText,
               fontWeight: FontWeight.w700,
@@ -380,17 +409,17 @@ class _CompletedProjectCard extends StatelessWidget {
               FilledButton.icon(
                 onPressed: onAddMission,
                 icon: const Icon(Icons.add_task),
-                label: const Text('Agregar misi\u00F3n extra'),
+                label: Text(l10n.addExtraQuest),
               ),
               OutlinedButton.icon(
                 onPressed: onCreateProject,
                 icon: const Icon(Icons.add_rounded),
-                label: const Text('Crear nuevo proyecto'),
+                label: Text(l10n.createNewProject),
               ),
               OutlinedButton.icon(
                 onPressed: null,
                 icon: const Icon(Icons.emoji_events),
-                label: const Text('Guardar en Sal\u00F3n de la Fama'),
+                label: Text(l10n.saveHallOfFame),
               ),
             ],
           ),

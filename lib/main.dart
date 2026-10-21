@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'l10n/app_localizations.dart';
 import 'models/cosplay_project.dart';
 import 'screens/create_project_screen.dart';
 import 'screens/project_detail_screen.dart';
@@ -28,9 +29,11 @@ class _CosplayQuestAppState extends State<CosplayQuestApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Cosplay Quest',
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: CosplayTheme.dark(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
         builder: (context) {
           return WelcomeScreen(

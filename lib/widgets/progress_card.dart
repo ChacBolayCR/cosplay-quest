@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../theme/cosplay_theme.dart';
 
 class ProgressCard extends StatelessWidget {
@@ -18,6 +19,8 @@ class ProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -78,7 +81,7 @@ class ProgressCard extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Pr\u00F3xima misi\u00F3n: $nextMission',
+                  l10n.nextQuest(nextMission),
                   style: const TextStyle(
                     color: CosplayTheme.mutedText,
                     fontWeight: FontWeight.w700,

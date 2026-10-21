@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/cosplay_project.dart';
 import '../theme/cosplay_theme.dart';
 
@@ -18,7 +19,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
   final _budgetController = TextEditingController();
 
   DateTime? _deadline;
-  String _level = 'Principiante';
+  String _level = 'beginner';
 
   @override
   void dispose() {
@@ -76,8 +77,10 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Crear proyecto')),
+      appBar: AppBar(title: Text(l10n.createProjectAppBar)),
       body: DecoratedBox(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -108,13 +111,13 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Nueva aventura',
+                              l10n.newAdventure,
                               style: Theme.of(context).textTheme.headlineSmall
                                   ?.copyWith(fontWeight: FontWeight.w900),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
-                              'Define el cosplay, el evento y el nivel de desaf\u00EDo.',
+                            Text(
+                              l10n.createProjectIntro,
                               style: TextStyle(
                                 color: CosplayTheme.mutedText,
                                 fontWeight: FontWeight.w600,
@@ -124,13 +127,13 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                             TextFormField(
                               controller: _nameController,
                               textInputAction: TextInputAction.next,
-                              decoration: const InputDecoration(
-                                labelText: 'Nombre del cosplay/proyecto',
-                                prefixIcon: Icon(Icons.theater_comedy),
+                              decoration: InputDecoration(
+                                labelText: l10n.projectNameLabel,
+                                prefixIcon: const Icon(Icons.theater_comedy),
                               ),
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
-                                  return 'Ingresa un nombre de proyecto';
+                                  return l10n.projectNameError;
                                 }
                                 return null;
                               },
@@ -139,13 +142,13 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                             TextFormField(
                               controller: _eventController,
                               textInputAction: TextInputAction.next,
-                              decoration: const InputDecoration(
-                                labelText: 'Evento objetivo',
-                                prefixIcon: Icon(Icons.event),
+                              decoration: InputDecoration(
+                                labelText: l10n.targetEventLabel,
+                                prefixIcon: const Icon(Icons.event),
                               ),
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
-                                  return 'Ingresa el evento objetivo';
+                                  return l10n.targetEventError;
                                 }
                                 return null;
                               },
@@ -155,36 +158,36 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                               controller: _deadlineController,
                               readOnly: true,
                               onTap: _pickDeadline,
-                              decoration: const InputDecoration(
-                                labelText: 'Fecha l\u00EDmite',
-                                prefixIcon: Icon(Icons.calendar_month),
+                              decoration: InputDecoration(
+                                labelText: l10n.deadlineLabel,
+                                prefixIcon: const Icon(Icons.calendar_month),
                               ),
                               validator: (_) {
                                 if (_deadline == null) {
-                                  return 'Selecciona una fecha l\u00EDmite';
+                                  return l10n.deadlineError;
                                 }
                                 return null;
                               },
                             ),
                             const SizedBox(height: 14),
                             DropdownButtonFormField<String>(
-                              value: _level,
-                              decoration: const InputDecoration(
-                                labelText: 'Nivel',
-                                prefixIcon: Icon(Icons.trending_up),
+                              initialValue: _level,
+                              decoration: InputDecoration(
+                                labelText: l10n.levelLabel,
+                                prefixIcon: const Icon(Icons.trending_up),
                               ),
-                              items: const [
+                              items: [
                                 DropdownMenuItem(
-                                  value: 'Principiante',
-                                  child: Text('Principiante'),
+                                  value: 'beginner',
+                                  child: Text(l10n.beginner),
                                 ),
                                 DropdownMenuItem(
-                                  value: 'Intermedio',
-                                  child: Text('Intermedio'),
+                                  value: 'intermediate',
+                                  child: Text(l10n.intermediate),
                                 ),
                                 DropdownMenuItem(
-                                  value: 'Avanzado',
-                                  child: Text('Avanzado'),
+                                  value: 'advanced',
+                                  child: Text(l10n.advanced),
                                 ),
                               ],
                               onChanged: (value) =>
@@ -194,16 +197,16 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                             TextFormField(
                               controller: _budgetController,
                               keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: 'Presupuesto estimado',
-                                prefixIcon: Icon(Icons.savings),
+                              decoration: InputDecoration(
+                                labelText: l10n.estimatedBudgetLabel,
+                                prefixIcon: const Icon(Icons.savings),
                               ),
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
-                                  return 'Ingresa un presupuesto estimado';
+                                  return l10n.estimatedBudgetError;
                                 }
                                 if (double.tryParse(value.trim()) == null) {
-                                  return 'Usa un n\u00FAmero v\u00E1lido';
+                                  return l10n.validNumberError;
                                 }
                                 return null;
                               },
@@ -215,7 +218,7 @@ class _CreateProjectScreenState extends State<CreateProjectScreen> {
                       FilledButton.icon(
                         onPressed: _createProject,
                         icon: const Icon(Icons.auto_awesome),
-                        label: const Text('Crear aventura'),
+                        label: Text(l10n.createAdventure),
                       ),
                     ],
                   ),

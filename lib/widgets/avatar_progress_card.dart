@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../theme/cosplay_theme.dart';
 
 class AvatarProgressCard extends StatelessWidget {
@@ -14,6 +15,7 @@ class AvatarProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final auraSize = 86 + (progress * 34);
 
     return Container(
@@ -82,13 +84,13 @@ class AvatarProgressCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Tu avatar evoluciona con cada misi\u00F3n',
+                Text(
+                  l10n.avatarEvolves,
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Estado: ${(progress * 100).round()}% de poder desbloqueado',
+                  l10n.avatarPowerState((progress * 100).round()),
                   style: const TextStyle(
                     color: CosplayTheme.mutedText,
                     fontWeight: FontWeight.w600,
