@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 
+part 'cosplay_piece.dart';
+
 class CosplayProject {
   CosplayProject({
     required this.name,
-    required this.eventName,
-    required this.deadline,
-    required this.level,
-    required this.estimatedBudget,
-    required this.missions,
+    this.eventName = '',
+    this.deadline,
+    this.level = 'beginner',
+    this.estimatedBudget = 0,
+    List<CosplayMission>? missions,
+    String? characterName,
+    this.franchise = '',
+    this.variant,
+    this.categories = const [],
     List<VisualReference>? references,
     this.baseXp = 1250,
     this.journalEntries = const [],
@@ -18,15 +24,40 @@ class CosplayProject {
       JournalEntryKey.materialsBought,
       JournalEntryKey.firstPieceDone,
     ],
-  }) : references = references ?? createMockReferences();
+  }) : characterName = characterName ?? name,
+       _legacyMissions = missions ?? [],
+       references = references ?? createMockReferences();
 
   final String name;
   final String eventName;
-  final DateTime deadline;
+  final DateTime? deadline;
   final String level;
   final double estimatedBudget;
   final int baseXp;
-  final List<CosplayMission> missions;
+  final String characterName;
+  final String franchise;
+  final String? variant;
+  final List<CosplayCategory> categories;
+  final List<CosplayMission> _legacyMissions;
+
+  Iterable<CosplayPiece> get pieces => categories.expand((c) => c.pieces);
+  List<CosplayMission> get generalMissions =>
+      List.unmodifiable(_legacyMissions);
+
+  // Flat missions remain readable for projects created before decomposition.
+  List<CosplayMission> get missions => [
+    ..._legacyMissions,
+    ...pieces.expand((piece) => piece.allQuests),
+  ];
+
+  void addCustomMission(CosplayMission mission, {CosplayPiece? piece}) {
+    if (piece != null) {
+      piece.quests.add(mission);
+    } else {
+      _legacyMissions.add(mission);
+    }
+  }
+
   final List<VisualReference> references;
   final List<String> journalEntries;
   final List<JournalEntryKey> journalEntryKeys;
@@ -34,10 +65,19 @@ class CosplayProject {
   int get completedCount =>
       missions.where((mission) => mission.completed).length;
 
-  bool get isComplete =>
-      missions.isNotEmpty && completedCount == missions.length;
+  bool get isComplete => pieces.isNotEmpty
+      ? pieces.every((piece) => piece.isComplete) &&
+            _legacyMissions.every((mission) => mission.completed)
+      : missions.isNotEmpty && completedCount == missions.length;
 
   double get progress {
+    if (pieces.isNotEmpty) {
+      final values = [
+        ...pieces.map((piece) => piece.progress),
+        ..._legacyMissions.map((mission) => mission.completed ? 1.0 : 0.0),
+      ];
+      return values.reduce((a, b) => a + b) / values.length;
+    }
     if (missions.isEmpty) return 0;
     return completedCount / missions.length;
   }
@@ -50,6 +90,8 @@ class CosplayProject {
   }
 
   int get daysRemaining {
+    final deadline = this.deadline;
+    if (deadline == null) return 0;
     final today = DateTime.now();
     final current = DateTime(today.year, today.month, today.day);
     final target = DateTime(deadline.year, deadline.month, deadline.day);
@@ -110,6 +152,7 @@ class CosplayMission {
     required this.type,
     IconData? icon,
     this.template,
+    this.stage,
     this.completed = false,
   }) : icon = icon ?? type.icon;
 
@@ -117,6 +160,7 @@ class CosplayMission {
   final MissionType type;
   final IconData icon;
   final MissionTemplate? template;
+  final QuestStage? stage;
   bool completed;
 
   int get xp => type.xp;
@@ -124,6 +168,7 @@ class CosplayMission {
       type.localizedLabel(l10n);
 
   String localizedTitle(AppLocalizations l10n) {
+    if (stage != null) return stage!.label(l10n);
     return switch (template) {
       MissionTemplate.researchReferences => l10n.missionResearchReferences,
       MissionTemplate.buyEvaFoam => l10n.missionBuyEvaFoam,
@@ -336,6 +381,21 @@ CosplayProject createMockProject() {
     deadline: deadline,
     level: 'Avanzado',
     estimatedBudget: 180,
-    missions: missions,
+    franchise: 'Overlord',
+    categories: [
+      CosplayCategory(
+        id: 'other',
+        kind: CategoryKind.other,
+        pieces: [
+          CosplayPiece(
+            id: 'mock-main',
+            name: 'Ainz Ooal Gown',
+            categoryId: 'other',
+            acquisitionMethod: AcquisitionMethod.build,
+            quests: missions,
+          ),
+        ],
+      ),
+    ],
   );
 }

@@ -48,10 +48,18 @@ class _CosplayQuestAppState extends State<CosplayQuestApp> {
   void _openProjectsHome(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => ProjectsHomeScreen(
-          projects: _projects,
-          onCreateProject: () => _openCreateProject(context),
-          onOpenProject: (project) => _openProjectDetail(context, project),
+        builder: (_) => StatefulBuilder(
+          builder: (homeContext, refresh) => ProjectsHomeScreen(
+            projects: _projects,
+            onCreateProject: () async {
+              await _openCreateProject(homeContext);
+              if (homeContext.mounted) refresh(() {});
+            },
+            onOpenProject: (project) async {
+              await _openProjectDetail(homeContext, project);
+              if (homeContext.mounted) refresh(() {});
+            },
+          ),
         ),
       ),
     );

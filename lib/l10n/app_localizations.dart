@@ -98,6 +98,360 @@ abstract class AppLocalizations {
     Locale('es'),
   ];
 
+  /// No description provided for @resumeAdventure.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Quest'**
+  String get resumeAdventure;
+
+  /// No description provided for @yourBuild.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Build'**
+  String get yourBuild;
+
+  /// No description provided for @allCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allCategories;
+
+  /// No description provided for @nextQuestHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Next quest'**
+  String get nextQuestHeading;
+
+  /// No description provided for @openPiece.
+  ///
+  /// In en, this message translates to:
+  /// **'Open piece'**
+  String get openPiece;
+
+  /// No description provided for @completeQuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete quest'**
+  String get completeQuest;
+
+  /// No description provided for @noPendingQuests.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending quests'**
+  String get noPendingQuests;
+
+  /// No description provided for @subpiecesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Subpieces'**
+  String get subpiecesLabel;
+
+  /// No description provided for @projectIdentity.
+  ///
+  /// In en, this message translates to:
+  /// **'Project identity'**
+  String get projectIdentity;
+
+  /// No description provided for @characterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Character'**
+  String get characterLabel;
+
+  /// No description provided for @franchiseLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Franchise'**
+  String get franchiseLabel;
+
+  /// No description provided for @variantLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Version / variant (optional)'**
+  String get variantLabel;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get requiredField;
+
+  /// No description provided for @continueButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueButton;
+
+  /// No description provided for @backButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get backButton;
+
+  /// No description provided for @breakdownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Break down your cosplay'**
+  String get breakdownTitle;
+
+  /// No description provided for @chooseCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your categories'**
+  String get chooseCategories;
+
+  /// No description provided for @categoryClothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing'**
+  String get categoryClothing;
+
+  /// No description provided for @categoryArmor.
+  ///
+  /// In en, this message translates to:
+  /// **'Armor'**
+  String get categoryArmor;
+
+  /// No description provided for @categoryProps.
+  ///
+  /// In en, this message translates to:
+  /// **'Props'**
+  String get categoryProps;
+
+  /// No description provided for @categoryHead.
+  ///
+  /// In en, this message translates to:
+  /// **'Wig / Head'**
+  String get categoryHead;
+
+  /// No description provided for @categoryAccessories.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessories'**
+  String get categoryAccessories;
+
+  /// No description provided for @categoryFootwear.
+  ///
+  /// In en, this message translates to:
+  /// **'Footwear'**
+  String get categoryFootwear;
+
+  /// No description provided for @categoryMakeup.
+  ///
+  /// In en, this message translates to:
+  /// **'Makeup'**
+  String get categoryMakeup;
+
+  /// No description provided for @categoryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get categoryOther;
+
+  /// No description provided for @addPiece.
+  ///
+  /// In en, this message translates to:
+  /// **'Add piece'**
+  String get addPiece;
+
+  /// No description provided for @editPiece.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit piece'**
+  String get editPiece;
+
+  /// No description provided for @removePiece.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove piece'**
+  String get removePiece;
+
+  /// No description provided for @pieceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Piece name'**
+  String get pieceName;
+
+  /// No description provided for @acquisitionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'How will you get it?'**
+  String get acquisitionLabel;
+
+  /// No description provided for @acquisitionBuild.
+  ///
+  /// In en, this message translates to:
+  /// **'Build'**
+  String get acquisitionBuild;
+
+  /// No description provided for @acquisitionBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy'**
+  String get acquisitionBuy;
+
+  /// No description provided for @acquisitionModify.
+  ///
+  /// In en, this message translates to:
+  /// **'Modify'**
+  String get acquisitionModify;
+
+  /// No description provided for @acquisitionCommission.
+  ///
+  /// In en, this message translates to:
+  /// **'Commission'**
+  String get acquisitionCommission;
+
+  /// No description provided for @acquisitionAlreadyHave.
+  ///
+  /// In en, this message translates to:
+  /// **'Already Have'**
+  String get acquisitionAlreadyHave;
+
+  /// No description provided for @techniqueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Technique / material (optional)'**
+  String get techniqueLabel;
+
+  /// No description provided for @techniquePrinting.
+  ///
+  /// In en, this message translates to:
+  /// **'3D Printing'**
+  String get techniquePrinting;
+
+  /// No description provided for @techniqueSewing.
+  ///
+  /// In en, this message translates to:
+  /// **'Sewing'**
+  String get techniqueSewing;
+
+  /// No description provided for @techniqueLeather.
+  ///
+  /// In en, this message translates to:
+  /// **'Leather'**
+  String get techniqueLeather;
+
+  /// No description provided for @techniqueThermoplastic.
+  ///
+  /// In en, this message translates to:
+  /// **'Thermoplastic'**
+  String get techniqueThermoplastic;
+
+  /// No description provided for @techniqueResin.
+  ///
+  /// In en, this message translates to:
+  /// **'Resin'**
+  String get techniqueResin;
+
+  /// No description provided for @techniqueMixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed Technique'**
+  String get techniqueMixed;
+
+  /// No description provided for @saveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveButton;
+
+  /// No description provided for @addPiecesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one piece in each selected category.'**
+  String get addPiecesHelp;
+
+  /// No description provided for @categoryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one category'**
+  String get categoryRequired;
+
+  /// No description provided for @pieceRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a piece in each category to continue'**
+  String get pieceRequired;
+
+  /// No description provided for @addFixQuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Add fix quest'**
+  String get addFixQuest;
+
+  /// No description provided for @pieceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Piece'**
+  String get pieceLabel;
+
+  /// No description provided for @generalQuests.
+  ///
+  /// In en, this message translates to:
+  /// **'Project quests'**
+  String get generalQuests;
+
+  /// No description provided for @stageReferences.
+  ///
+  /// In en, this message translates to:
+  /// **'References'**
+  String get stageReferences;
+
+  /// No description provided for @stagePattern.
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern / Measurements'**
+  String get stagePattern;
+
+  /// No description provided for @stageShape.
+  ///
+  /// In en, this message translates to:
+  /// **'Shape / Form'**
+  String get stageShape;
+
+  /// No description provided for @stageAssembly.
+  ///
+  /// In en, this message translates to:
+  /// **'Assembly / Fastening'**
+  String get stageAssembly;
+
+  /// No description provided for @stageFit.
+  ///
+  /// In en, this message translates to:
+  /// **'Fit Test'**
+  String get stageFit;
+
+  /// No description provided for @stageFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish / Paint'**
+  String get stageFinish;
+
+  /// No description provided for @stageSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select / Agree specifications'**
+  String get stageSelect;
+
+  /// No description provided for @stageOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Order / Commission'**
+  String get stageOrder;
+
+  /// No description provided for @stageReceive.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive / Inspect'**
+  String get stageReceive;
+
+  /// No description provided for @readyPiece.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for the adventure'**
+  String get readyPiece;
+
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:

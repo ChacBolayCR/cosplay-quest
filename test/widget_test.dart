@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cosplay_copilot_mvp/main.dart';
+import 'package:cosplay_copilot_mvp/screens/project_detail_screen.dart';
 
 void main() {
   testWidgets('Cosplay Quest opens projects and references tab', (
@@ -44,7 +45,7 @@ void main() {
     await tester.tap(find.text('Quests').last);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.add_rounded).last);
+    await tester.tap(find.byTooltip('Add extra quest'));
     await tester.pumpAndSettle();
 
     expect(find.text('Custom quests grant +10 XP.'), findsOneWidget);
@@ -55,10 +56,19 @@ void main() {
     await tester.tap(find.text('Add quest'));
     await tester.pumpAndSettle();
 
+    final project = tester
+        .widget<ProjectDetailScreen>(find.byType(ProjectDetailScreen))
+        .project;
+    expect(
+      project.pieces.single.quests.last.title,
+      'Ajustar hombrera izquierda',
+    );
+    expect(find.text('Quest added +10 XP'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('piece-row-mock-main')));
+    await tester.pumpAndSettle();
     expect(find.text('Ajustar hombrera izquierda'), findsOneWidget);
     expect(find.text('Custom \u00B7 +10 XP'), findsOneWidget);
     expect(find.text('Pending'), findsWidgets);
-    expect(find.text('Quest added +10 XP'), findsOneWidget);
   });
 
   testWidgets('app reacts to Spanish device locale', (tester) async {

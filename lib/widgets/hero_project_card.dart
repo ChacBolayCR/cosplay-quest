@@ -11,13 +11,19 @@ class HeroProjectCard extends StatelessWidget {
     required this.progress,
     required this.daysRemaining,
     required this.onContinue,
+    this.compact = false,
+    this.currentXp,
+    this.rank,
   });
 
   final String projectName;
   final String eventName;
   final double progress;
-  final int daysRemaining;
+  final int? daysRemaining;
   final VoidCallback onContinue;
+  final bool compact;
+  final int? currentXp;
+  final String? rank;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +31,7 @@ class HeroProjectCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(22),
+      padding: EdgeInsets.all(compact ? 16 : 22),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
         gradient: const LinearGradient(
@@ -78,35 +84,44 @@ class HeroProjectCard extends StatelessWidget {
               const SizedBox(height: 18),
               Text(
                 projectName,
-                style: const TextStyle(
-                  fontSize: 32,
+                style: TextStyle(
+                  fontSize: compact ? 26 : 32,
                   height: 1,
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.welcomeSubtitle,
-                style: TextStyle(
-                  color: CosplayTheme.mutedText,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+              if (!compact) ...[
+                const SizedBox(height: 8),
+                Text(
+                  l10n.welcomeSubtitle,
+                  style: TextStyle(
+                    color: CosplayTheme.mutedText,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
+              ],
+              SizedBox(height: compact ? 12 : 24),
               Wrap(
                 spacing: 10,
                 runSpacing: 10,
                 children: [
-                  _QuestPill(icon: Icons.shield_moon, label: projectName),
-                  _QuestPill(icon: Icons.event, label: eventName),
-                  _QuestPill(
-                    icon: Icons.hourglass_top,
-                    label: l10n.daysShort(daysRemaining),
-                  ),
+                  if (!compact)
+                    _QuestPill(icon: Icons.shield_moon, label: projectName),
+                  if (currentXp != null)
+                    _QuestPill(icon: Icons.bolt, label: '$currentXp XP'),
+                  if (rank != null)
+                    _QuestPill(icon: Icons.workspace_premium, label: rank!),
+                  if (eventName.isNotEmpty)
+                    _QuestPill(icon: Icons.event, label: eventName),
+                  if (daysRemaining != null)
+                    _QuestPill(
+                      icon: Icons.hourglass_top,
+                      label: l10n.daysShort(daysRemaining!),
+                    ),
                 ],
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: compact ? 12 : 24),
               Row(
                 children: [
                   Expanded(
@@ -133,12 +148,14 @@ class HeroProjectCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              FilledButton.icon(
-                onPressed: onContinue,
-                icon: const Icon(Icons.play_arrow_rounded),
-                label: Text(l10n.continueQuest),
-              ),
+              if (!compact) ...[
+                const SizedBox(height: 20),
+                FilledButton.icon(
+                  onPressed: onContinue,
+                  icon: const Icon(Icons.play_arrow_rounded),
+                  label: Text(l10n.continueQuest),
+                ),
+              ],
             ],
           ),
         ],
@@ -167,7 +184,12 @@ class _QuestPill extends StatelessWidget {
         children: [
           Icon(icon, size: 17, color: CosplayTheme.softBlue),
           const SizedBox(width: 7),
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w700)),
+          Flexible(
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ),
         ],
       ),
     );

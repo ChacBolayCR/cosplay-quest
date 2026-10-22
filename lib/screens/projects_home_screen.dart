@@ -122,7 +122,9 @@ class _ProjectCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        project.eventName,
+                        project.franchise.isNotEmpty
+                            ? project.franchise
+                            : project.eventName,
                         style: const TextStyle(
                           color: CosplayTheme.mutedText,
                           fontWeight: FontWeight.w600,
@@ -160,13 +162,14 @@ class _ProjectCard extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Text(
-                  l10n.daysRemaining(project.daysRemaining),
-                  style: const TextStyle(
-                    color: CosplayTheme.mutedText,
-                    fontWeight: FontWeight.w600,
+                if (project.deadline != null)
+                  Text(
+                    l10n.daysRemaining(project.daysRemaining),
+                    style: const TextStyle(
+                      color: CosplayTheme.mutedText,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
               ],
             ),
           ],

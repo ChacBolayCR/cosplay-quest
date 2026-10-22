@@ -9,6 +9,185 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get resumeAdventure => 'Continuar aventura';
+
+  @override
+  String get yourBuild => 'Tu build';
+
+  @override
+  String get allCategories => 'Todas';
+
+  @override
+  String get nextQuestHeading => 'Siguiente misión';
+
+  @override
+  String get openPiece => 'Abrir pieza';
+
+  @override
+  String get completeQuest => 'Completar misión';
+
+  @override
+  String get noPendingQuests => 'Sin misiones pendientes';
+
+  @override
+  String get subpiecesLabel => 'Subpiezas';
+
+  @override
+  String get projectIdentity => 'Identidad del proyecto';
+
+  @override
+  String get characterLabel => 'Personaje';
+
+  @override
+  String get franchiseLabel => 'Franquicia';
+
+  @override
+  String get variantLabel => 'Versión / variante (opcional)';
+
+  @override
+  String get requiredField => 'Este campo es obligatorio';
+
+  @override
+  String get continueButton => 'Continuar';
+
+  @override
+  String get backButton => 'Atrás';
+
+  @override
+  String get breakdownTitle => 'Desglosa tu cosplay';
+
+  @override
+  String get chooseCategories => 'Elige tus categorías';
+
+  @override
+  String get categoryClothing => 'Vestuario';
+
+  @override
+  String get categoryArmor => 'Armadura';
+
+  @override
+  String get categoryProps => 'Utilería';
+
+  @override
+  String get categoryHead => 'Peluca / Cabeza';
+
+  @override
+  String get categoryAccessories => 'Accesorios';
+
+  @override
+  String get categoryFootwear => 'Calzado';
+
+  @override
+  String get categoryMakeup => 'Maquillaje';
+
+  @override
+  String get categoryOther => 'Otro';
+
+  @override
+  String get addPiece => 'Agregar pieza';
+
+  @override
+  String get editPiece => 'Editar pieza';
+
+  @override
+  String get removePiece => 'Eliminar pieza';
+
+  @override
+  String get pieceName => 'Nombre de la pieza';
+
+  @override
+  String get acquisitionLabel => '¿Cómo la obtendrás?';
+
+  @override
+  String get acquisitionBuild => 'Fabricar';
+
+  @override
+  String get acquisitionBuy => 'Comprar';
+
+  @override
+  String get acquisitionModify => 'Modificar';
+
+  @override
+  String get acquisitionCommission => 'Encargar';
+
+  @override
+  String get acquisitionAlreadyHave => 'Ya lo tengo';
+
+  @override
+  String get techniqueLabel => 'Técnica / material (opcional)';
+
+  @override
+  String get techniquePrinting => 'Impresión 3D';
+
+  @override
+  String get techniqueSewing => 'Costura';
+
+  @override
+  String get techniqueLeather => 'Cuero';
+
+  @override
+  String get techniqueThermoplastic => 'Termoplástico';
+
+  @override
+  String get techniqueResin => 'Resina';
+
+  @override
+  String get techniqueMixed => 'Técnica mixta';
+
+  @override
+  String get saveButton => 'Guardar';
+
+  @override
+  String get addPiecesHelp =>
+      'Agrega al menos una pieza en cada categoría seleccionada.';
+
+  @override
+  String get categoryRequired => 'Selecciona al menos una categoría';
+
+  @override
+  String get pieceRequired =>
+      'Agrega una pieza en cada categoría para continuar';
+
+  @override
+  String get addFixQuest => 'Agregar misión de corrección';
+
+  @override
+  String get pieceLabel => 'Pieza';
+
+  @override
+  String get generalQuests => 'Misiones del proyecto';
+
+  @override
+  String get stageReferences => 'Referencias';
+
+  @override
+  String get stagePattern => 'Patrón / Medidas';
+
+  @override
+  String get stageShape => 'Forma / Moldeado';
+
+  @override
+  String get stageAssembly => 'Ensamble / Sujeción';
+
+  @override
+  String get stageFit => 'Prueba de ajuste';
+
+  @override
+  String get stageFinish => 'Acabado / Pintura';
+
+  @override
+  String get stageSelect => 'Elegir / Acordar especificaciones';
+
+  @override
+  String get stageOrder => 'Pedir / Encargar';
+
+  @override
+  String get stageReceive => 'Recibir / Inspeccionar';
+
+  @override
+  String get readyPiece => 'Lista para la aventura';
+
+  @override
   String get appTitle => 'Cosplay Quest';
 
   @override

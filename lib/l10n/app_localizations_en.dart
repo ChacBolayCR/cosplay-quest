@@ -9,6 +9,184 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get resumeAdventure => 'Continue Quest';
+
+  @override
+  String get yourBuild => 'Your Build';
+
+  @override
+  String get allCategories => 'All';
+
+  @override
+  String get nextQuestHeading => 'Next quest';
+
+  @override
+  String get openPiece => 'Open piece';
+
+  @override
+  String get completeQuest => 'Complete quest';
+
+  @override
+  String get noPendingQuests => 'No pending quests';
+
+  @override
+  String get subpiecesLabel => 'Subpieces';
+
+  @override
+  String get projectIdentity => 'Project identity';
+
+  @override
+  String get characterLabel => 'Character';
+
+  @override
+  String get franchiseLabel => 'Franchise';
+
+  @override
+  String get variantLabel => 'Version / variant (optional)';
+
+  @override
+  String get requiredField => 'This field is required';
+
+  @override
+  String get continueButton => 'Continue';
+
+  @override
+  String get backButton => 'Back';
+
+  @override
+  String get breakdownTitle => 'Break down your cosplay';
+
+  @override
+  String get chooseCategories => 'Choose your categories';
+
+  @override
+  String get categoryClothing => 'Clothing';
+
+  @override
+  String get categoryArmor => 'Armor';
+
+  @override
+  String get categoryProps => 'Props';
+
+  @override
+  String get categoryHead => 'Wig / Head';
+
+  @override
+  String get categoryAccessories => 'Accessories';
+
+  @override
+  String get categoryFootwear => 'Footwear';
+
+  @override
+  String get categoryMakeup => 'Makeup';
+
+  @override
+  String get categoryOther => 'Other';
+
+  @override
+  String get addPiece => 'Add piece';
+
+  @override
+  String get editPiece => 'Edit piece';
+
+  @override
+  String get removePiece => 'Remove piece';
+
+  @override
+  String get pieceName => 'Piece name';
+
+  @override
+  String get acquisitionLabel => 'How will you get it?';
+
+  @override
+  String get acquisitionBuild => 'Build';
+
+  @override
+  String get acquisitionBuy => 'Buy';
+
+  @override
+  String get acquisitionModify => 'Modify';
+
+  @override
+  String get acquisitionCommission => 'Commission';
+
+  @override
+  String get acquisitionAlreadyHave => 'Already Have';
+
+  @override
+  String get techniqueLabel => 'Technique / material (optional)';
+
+  @override
+  String get techniquePrinting => '3D Printing';
+
+  @override
+  String get techniqueSewing => 'Sewing';
+
+  @override
+  String get techniqueLeather => 'Leather';
+
+  @override
+  String get techniqueThermoplastic => 'Thermoplastic';
+
+  @override
+  String get techniqueResin => 'Resin';
+
+  @override
+  String get techniqueMixed => 'Mixed Technique';
+
+  @override
+  String get saveButton => 'Save';
+
+  @override
+  String get addPiecesHelp =>
+      'Add at least one piece in each selected category.';
+
+  @override
+  String get categoryRequired => 'Select at least one category';
+
+  @override
+  String get pieceRequired => 'Add a piece in each category to continue';
+
+  @override
+  String get addFixQuest => 'Add fix quest';
+
+  @override
+  String get pieceLabel => 'Piece';
+
+  @override
+  String get generalQuests => 'Project quests';
+
+  @override
+  String get stageReferences => 'References';
+
+  @override
+  String get stagePattern => 'Pattern / Measurements';
+
+  @override
+  String get stageShape => 'Shape / Form';
+
+  @override
+  String get stageAssembly => 'Assembly / Fastening';
+
+  @override
+  String get stageFit => 'Fit Test';
+
+  @override
+  String get stageFinish => 'Finish / Paint';
+
+  @override
+  String get stageSelect => 'Select / Agree specifications';
+
+  @override
+  String get stageOrder => 'Order / Commission';
+
+  @override
+  String get stageReceive => 'Receive / Inspect';
+
+  @override
+  String get readyPiece => 'Ready for the adventure';
+
+  @override
   String get appTitle => 'Cosplay Quest';
 
   @override

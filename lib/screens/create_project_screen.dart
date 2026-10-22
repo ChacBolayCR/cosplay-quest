@@ -1,229 +1,219 @@
 import 'package:flutter/material.dart';
-
 import '../l10n/app_localizations.dart';
 import '../models/cosplay_project.dart';
-import '../theme/cosplay_theme.dart';
+import 'piece_editor_screen.dart';
 
 class CreateProjectScreen extends StatefulWidget {
   const CreateProjectScreen({super.key});
-
   @override
   State<CreateProjectScreen> createState() => _CreateProjectScreenState();
 }
 
 class _CreateProjectScreenState extends State<CreateProjectScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _eventController = TextEditingController();
-  final _deadlineController = TextEditingController();
-  final _budgetController = TextEditingController();
-
-  DateTime? _deadline;
-  String _level = 'beginner';
+  final _form = GlobalKey<FormState>();
+  final _character = TextEditingController();
+  final _franchise = TextEditingController();
+  final _variant = TextEditingController();
+  final _categories = <CategoryKind, CosplayCategory>{};
+  final _selected = <CategoryKind>{};
+  int _step = 0;
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _eventController.dispose();
-    _deadlineController.dispose();
-    _budgetController.dispose();
+    _character.dispose();
+    _franchise.dispose();
+    _variant.dispose();
     super.dispose();
   }
 
-  Future<void> _pickDeadline() async {
-    final now = DateTime.now();
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: _deadline ?? now.add(const Duration(days: 60)),
-      firstDate: now,
-      lastDate: now.add(const Duration(days: 730)),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: CosplayTheme.questGold,
-              onPrimary: CosplayTheme.voidBlack,
-              surface: CosplayTheme.cardInk,
-            ),
-          ),
-          child: child!,
-        );
-      },
+  Future<void> _edit(CosplayCategory category, [CosplayPiece? piece]) async {
+    final result = await Navigator.of(context).push<CosplayPiece>(
+      MaterialPageRoute(
+        builder: (_) => PieceEditorScreen(category: category, piece: piece),
+      ),
     );
-
-    if (picked == null) return;
+    if (!mounted || result == null) return;
     setState(() {
-      _deadline = picked;
-      _deadlineController.text = '${picked.day}/${picked.month}/${picked.year}';
+      if (piece == null) {
+        category.pieces.add(result);
+      } else {
+        category.pieces[category.pieces.indexOf(piece)] = result;
+      }
     });
   }
 
-  void _createProject() {
-    if (!_formKey.currentState!.validate()) return;
-
-    final budget = double.tryParse(_budgetController.text.trim()) ?? 0;
-    final project = CosplayProject(
-      name: _nameController.text.trim(),
-      eventName: _eventController.text.trim(),
-      deadline: _deadline ?? DateTime.now().add(const Duration(days: 60)),
-      level: _level,
-      estimatedBudget: budget,
-      baseXp: 0,
-      missions: createMockMissions(),
+  void _next() {
+    final l = AppLocalizations.of(context);
+    if (_step == 0 && !_form.currentState!.validate()) return;
+    if (_step == 1 && _selected.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l.categoryRequired)));
+      return;
+    }
+    if (_step < 2) {
+      setState(() => _step++);
+      return;
+    }
+    final categories = [
+      for (final kind in CategoryKind.values)
+        if (_selected.contains(kind)) _categories[kind]!,
+    ];
+    if (categories.any((category) => category.pieces.isEmpty)) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l.pieceRequired)));
+      return;
+    }
+    Navigator.of(context).pop(
+      CosplayProject(
+        name: _character.text.trim(),
+        characterName: _character.text.trim(),
+        franchise: _franchise.text.trim(),
+        variant: _variant.text.trim().isEmpty ? null : _variant.text.trim(),
+        baseXp: 0,
+        categories: categories,
+        journalEntryKeys: const [],
+      ),
     );
-
-    Navigator.of(context).pop(project);
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
+    final l = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.createProjectAppBar)),
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [CosplayTheme.nightBlue, CosplayTheme.voidBlack],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 680),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: CosplayTheme.cardInk,
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(color: CosplayTheme.border),
+      appBar: AppBar(title: Text(l.createProjectAppBar)),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 680),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                LinearProgressIndicator(value: (_step + 1) / 3),
+                const SizedBox(height: 24),
+                Text(
+                  _step == 0
+                      ? l.projectIdentity
+                      : _step == 1
+                      ? l.chooseCategories
+                      : l.breakdownTitle,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 20),
+                if (_step == 0)
+                  Form(
+                    key: _form,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          key: const ValueKey('character'),
+                          controller: _character,
+                          decoration: InputDecoration(
+                            labelText: l.characterLabel,
+                          ),
+                          validator: (v) => v == null || v.trim().isEmpty
+                              ? l.requiredField
+                              : null,
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.newAdventure,
-                              style: Theme.of(context).textTheme.headlineSmall
-                                  ?.copyWith(fontWeight: FontWeight.w900),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              l10n.createProjectIntro,
-                              style: TextStyle(
-                                color: CosplayTheme.mutedText,
-                                fontWeight: FontWeight.w600,
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          key: const ValueKey('franchise'),
+                          controller: _franchise,
+                          decoration: InputDecoration(
+                            labelText: l.franchiseLabel,
+                          ),
+                          validator: (v) => v == null || v.trim().isEmpty
+                              ? l.requiredField
+                              : null,
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _variant,
+                          decoration: InputDecoration(
+                            labelText: l.variantLabel,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (_step == 1) ...[
+                  for (final kind in CategoryKind.values)
+                    CheckboxListTile(
+                      title: Text(kind.label(l)),
+                      value: _selected.contains(kind),
+                      onChanged: (value) => setState(() {
+                        if (value == true) {
+                          _selected.add(kind);
+                          _categories.putIfAbsent(
+                            kind,
+                            () => CosplayCategory(id: kind.name, kind: kind),
+                          );
+                        } else {
+                          _selected.remove(kind);
+                        }
+                      }),
+                    ),
+                ],
+                if (_step == 2) ...[
+                  Text(l.addPiecesHelp),
+                  const SizedBox(height: 16),
+                  for (final kind in CategoryKind.values)
+                    if (_selected.contains(kind)) ...[
+                      Text(
+                        kind.label(l),
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      for (final piece in _categories[kind]!.pieces)
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(piece.name),
+                          subtitle: Text(piece.acquisitionMethod.label(l)),
+                          onTap: () => _edit(_categories[kind]!, piece),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                tooltip: l.editPiece,
+                                icon: const Icon(Icons.edit_outlined),
+                                onPressed: () =>
+                                    _edit(_categories[kind]!, piece),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            TextFormField(
-                              controller: _nameController,
-                              textInputAction: TextInputAction.next,
-                              decoration: InputDecoration(
-                                labelText: l10n.projectNameLabel,
-                                prefixIcon: const Icon(Icons.theater_comedy),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return l10n.projectNameError;
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 14),
-                            TextFormField(
-                              controller: _eventController,
-                              textInputAction: TextInputAction.next,
-                              decoration: InputDecoration(
-                                labelText: l10n.targetEventLabel,
-                                prefixIcon: const Icon(Icons.event),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return l10n.targetEventError;
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 14),
-                            TextFormField(
-                              controller: _deadlineController,
-                              readOnly: true,
-                              onTap: _pickDeadline,
-                              decoration: InputDecoration(
-                                labelText: l10n.deadlineLabel,
-                                prefixIcon: const Icon(Icons.calendar_month),
-                              ),
-                              validator: (_) {
-                                if (_deadline == null) {
-                                  return l10n.deadlineError;
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 14),
-                            DropdownButtonFormField<String>(
-                              initialValue: _level,
-                              decoration: InputDecoration(
-                                labelText: l10n.levelLabel,
-                                prefixIcon: const Icon(Icons.trending_up),
-                              ),
-                              items: [
-                                DropdownMenuItem(
-                                  value: 'beginner',
-                                  child: Text(l10n.beginner),
+                              IconButton(
+                                tooltip: l.removePiece,
+                                icon: const Icon(Icons.delete_outline),
+                                onPressed: () => setState(
+                                  () => _categories[kind]!.pieces.remove(piece),
                                 ),
-                                DropdownMenuItem(
-                                  value: 'intermediate',
-                                  child: Text(l10n.intermediate),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'advanced',
-                                  child: Text(l10n.advanced),
-                                ),
-                              ],
-                              onChanged: (value) =>
-                                  setState(() => _level = value ?? _level),
-                            ),
-                            const SizedBox(height: 14),
-                            TextFormField(
-                              controller: _budgetController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                labelText: l10n.estimatedBudgetLabel,
-                                prefixIcon: const Icon(Icons.savings),
                               ),
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return l10n.estimatedBudgetError;
-                                }
-                                if (double.tryParse(value.trim()) == null) {
-                                  return l10n.validNumberError;
-                                }
-                                return null;
-                              },
-                            ),
-                          ],
+                            ],
+                          ),
+                        ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: OutlinedButton.icon(
+                          onPressed: () => _edit(_categories[kind]!),
+                          icon: const Icon(Icons.add),
+                          label: Text(l.addPiece),
                         ),
                       ),
-                      const SizedBox(height: 18),
-                      FilledButton.icon(
-                        onPressed: _createProject,
-                        icon: const Icon(Icons.auto_awesome),
-                        label: Text(l10n.createAdventure),
-                      ),
+                      const SizedBox(height: 20),
                     ],
+                ],
+                const SizedBox(height: 24),
+                FilledButton(
+                  onPressed: _next,
+                  child: Text(
+                    _step == 2 ? l.createAdventure : l.continueButton,
                   ),
                 ),
-              ),
+                if (_step > 0)
+                  TextButton(
+                    onPressed: () => setState(() => _step--),
+                    child: Text(l.backButton),
+                  ),
+              ],
             ),
           ),
         ),
